@@ -6,6 +6,12 @@
 #define WIFI_PASS "your wifi password here"
 
 /**
+ * Birthday config - just make it an unrealistic date to disable it
+ */
+#define BDAY_DAY 1
+#define BDAY_MONTH 1
+
+/**
  * Show the day name on the right side (next to the XX/XX day)
  */
 #define SHOW_DAY
@@ -26,7 +32,7 @@
  * You can find a list of timezone names here:
  * https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
  */
-#define TIME_ZONE "America/Chicago"
+#define TIME_ZONE "Australia/Sydney"
 
 /**
  * The full POSIX specification for your timezone. If TIME_ZONE is set, this will only serve as a backup to that.
@@ -70,12 +76,12 @@
 /**
  * metric or imperial
  */
-#define WEATHER_UNITS "imperial"
+#define WEATHER_UNITS "metric"
 
 /**
  * The location to get weather information for. Can also be a zip code for US locations.
  */
-#define WEATHER_LOCATION "Oklahoma City, Oklahoma, US"
+#define WEATHER_LOCATION "Sydney, NSW, AU"
 
 /**
  * The latitude and longitude for weather information. Optional. Overrides WEATHER_LOCATION if set.
@@ -168,4 +174,4 @@
 /**
  * If debug logs should be printed over serial
  */
-// #define DEBUG
+//#define DEBUG

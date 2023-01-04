@@ -223,6 +223,7 @@ void setup()
     char timestr[30];
     strftime(timestr, sizeof(timestr), "%d-%m-%Y %H:%M:%S", &now);
     DEBUG_PRINT("Waking up at %s", timestr);
+    DEBUG_PRINT("Reset Reason: %d", esp_reset_reason());
     #endif
 
     if (esp_reset_reason() == ESP_RST_BROWNOUT) {
@@ -302,6 +303,9 @@ void setup()
     #ifdef SHOW_WEATHER
     needsDisplayUpdate |= displayedWeatherVersion != getLastWeatherSync() && getSecondsToMidnight(&now) > SECONDS_BEFORE_MIDNIGHT_TO_SYNC_1 * 2;
     #endif
+    if (esp_reset_reason() == 1) {
+        needsDisplayUpdate = true;
+    }
     if (needsDisplayUpdate) {
         DEBUG_PRINT("Updating display for %d-%d-%d", now.tm_year + 1900, now.tm_mon + 1, now.tm_mday);
         display.update(&now);
@@ -352,7 +356,7 @@ void setup()
         needsWeatherSync = true;
         #endif
         DEBUG_PRINT("Sleeping for 1st sync");
-        deepSleep(secondsToMidnight - SECONDS_BEFORE_MIDNIGHT_TO_SYNC_1);
+        deepSleep((secondsToMidnight - SECONDS_BEFORE_MIDNIGHT_TO_SYNC_1));
     }
 }
 

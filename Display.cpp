@@ -304,6 +304,7 @@ void Display::init()
 
 void Display::update(const tm *now)
 {
+    DEBUG_PRINT("Starting Update");
     init();
     char buffer[10];
     const int year = now->tm_year + 1900;
@@ -342,9 +343,15 @@ void Display::update(const tm *now)
     #endif
 
     // Progress bar
-    _display->drawImage(IMG_PROGRESS_BAR, LEFT, 438);
-    int32_t progressWidth = IMG_PROGRESS_BAR.width * now->tm_mday / daysInMonth;
-    _display->fillRect(LEFT + progressWidth, 438, IMG_PROGRESS_BAR.width - progressWidth, IMG_PROGRESS_BAR.height, DisplayGDEW075T7::WHITE);
+    //_display->drawImage(IMG_PROGRESS_BAR, LEFT, 438);
+    //int32_t progressWidth = (IMG_PROGRESS_BAR.width * now->tm_mday / daysInMonth) - now->tm_mday;
+    //_display->fillRect(LEFT + progressWidth, 438, IMG_PROGRESS_BAR.width - progressWidth, IMG_PROGRESS_BAR.height, DisplayGDEW075T7::WHITE);
+    _display->fillRect(LEFT, 438, WIDTH, 35, DisplayGDEW075T7::WHITE);
+    int BarWidth = (WIDTH*10) / (daysInMonth * 2 - 1);
+    for( int i = 0; i < now->tm_mday; i++ )
+    {
+      _display->fillRect(LEFT + (i * 2 * BarWidth) / 10, 438, BarWidth / 10, 35, DisplayGDEW075T7::BLACK);
+    }
 
     #ifdef SHOW_WEATHER
 
@@ -382,15 +389,28 @@ void Display::update(const tm *now)
         for (int i = 0; i < 8; ++i) {
             drawChamberIcon(IMG_TURRET_HAZARD_ON, i % 5, i / 5);
         }
+    } else if (now->tm_mon == (BDAY_MONTH - 1) && now->tm_mday == BDAY_DAY) {
+        // Special icon set for my birthday
+        for (int i = 0; i < 8; ++i) {
+            drawChamberIcon(IMG_CAKE_ON, i % 5, i / 5);
+        }
     } else if (now->tm_mday <= 31) {
         for (int i = 0; i < 10; ++i) {
             drawChamberIcon(*CHAMBER_ICON_SETS[now->tm_mday - 1][i], i % 5, i / 5);
         }
+    } else
+    {
+      this->error({
+          "DATE PROBLEM??",
+          "",
+          "Something weird got returned for the date"
+      }, false);    
     }
 
     #endif // SHOW_WEATHER
 
     _display->refresh();
+    DEBUG_PRINT("Finishing Update");
 }
 
 #ifdef SHOW_WEATHER
